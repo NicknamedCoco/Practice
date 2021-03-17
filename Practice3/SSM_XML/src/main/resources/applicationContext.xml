@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                                        http://www.springframework.org/schema/util
+                                        http://www.springframework.org/schema/util/spring-util.xsd
+                                        http://www.springframework.org/schema/context
+                                        http://www.springframework.org/schema/context/spring-context.xsd
+                                        http://www.springframework.org/schema/aop
+                                        http://www.springframework.org/schema/aop/spring-aop.xsd
+                                        http://www.springframework.org/schema/tx
+                                        http://www.springframework.org/schema/tx/spring-tx.xsd
+                                        http://www.springframework.org/schema/mvc
+                                        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!--注解扫描排除@Controller和@ControllerAdvice-->
+    <context:component-scan base-package="world.keyi">
+        <context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!--
+        XML方式配置JDBCTemplate步骤如下:
+            1)配置引入外部资源文件
+            2)配置数据源,使用DruidDataSource类
+            3)JDBCTemplate，并引入数据源
+            4)在dao层自动装配即可使用
+    -->
+
+    <!--引入外部资源文件-->
+    <context:property-placeholder location="classpath:druid.properties"/>
+    <!--数据源-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${jdbc.driver}"></property>
+        <property name="url" value="${jdbc.url}"></property>
+        <property name="username" value="${jdbc.username}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+    </bean>
+
+
+    <!--mybatis.xml，创建sqlSessionFactory-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--指定mybatis核心配置文件位置-->
+        <property name="configLocation" value="classpath:mybatis.xml"/>
+        <!--指定要使用的数据源-->
+        <property name="dataSource" ref="dataSource"/>
+        <!--指定mapper映射文件的位置-->
+        <property name="mapperLocations" value="classpath:mapper/*.xml"/>
+    </bean>
+    <!--将mybatis创建的dao接口实现类加入到spring容器中，路径为dao接口路径-->
+    <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="world.keyi.dao"/>
+    </bean>
+
+    <!--
+        配置注解AOP不需要在Spring容器中配置
+        实现步骤：
+            1)创建自定义类，类上标注
+                @Aspect，表示该类是切面类/增强类/代理类
+                @Component，将该类加入spring容器中
+                @EnableAspectJAutoProxy，自动生成代理对象，如果有配置类，则可以标注在配置类上
+                @Order(0)，当有多个代理类时，设置代理类的优先级
+            2)类中配置切入点和各个通知
+    -->
+
+    <!--
+        XML和注解方式配置事务管理步骤:
+            1)配置事务管理器
+            2)开启事务注解驱动
+                使用完全注解开发时，配置类代替spring的xml文件时，@EnableTransactionManagement注解用来开启事务管理驱动
+            3)在service层的类上或方法上加@Transactional
+                添加在类上表示对类中所有方法添加事务，添加到方法上表示对某个方法添加事务。
+    -->
+    <!--创建事务管理器-->
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <!--注入数据源-->
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!--开启事务注解驱动-->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+</beans>

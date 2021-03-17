@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+    namespace:接口的全类名。world.keyi.dao.UserDao
+    id：接口中要被实现的方法名
+    resultType：接口方法的返回值类型，全类名,增删改不用写返回值类型
+        mybatis自动判断，如果是数字，返回int类型，如果是boolean，影响0行返回false，否则返回true
+-->
+<mapper namespace="world.keyi.dao.UserDao">
+    <!--开启二级缓存-->
+    <!--<cache></cache>-->
+
+    <!--查询所有用户-->
+    <select id="findAllUser" resultType="world.keyi.domain.User">
+        select * from tb_user
+    </select>
+    <!--<select id="findAll" resultType="User" databaseId="oracle">
+        select * from tb_user
+    </select>-->
+
+    <!--传递多个参数查询用户-->
+    <select id="findUserByUsernameAndEmail" resultType="world.keyi.domain.User">
+        select * from tb_user where username=#{username} and email=#{email}
+    </select>
+
+    <!--查询一条数据，并将该条数据封装进map-->
+    <select id="findUserByUsernameReturnMap" resultType="map">
+        select * from tb_user where username=#{username}
+    </select>
+
+    <!--查询多条数据，并将多条数据封装进map返回-->
+    <select id="findAllReturnMap" resultType="world.keyi.domain.User">
+        select * from tb_user
+    </select>
+
+    <!--增加用户-->
+    <!--<insert id="addUser">
+        <selectKey keyProperty="" order="BEFORE">
+            select max(id) from tb_user
+        </selectKey>
+        insert into tb_user values (#{username},#{password},#{email},#{birthday})
+    </insert>-->
+
+    <!--删除用户-->
+    <delete id="deleteUser">
+        delete from tb_user where email = #{email}
+    </delete>
+
+    <!--更新用户-->
+    <update id="updateUser">
+        update tb_user set username = #{username},password = #{password},birthday=#{birthday}
+        where email=#{email}
+    </update>
+
+    <!--
+        自定义结果映射，封装结果集
+        type属性：指定查询出的数据要封装的类型
+        id属性：唯一标识
+    -->
+    <resultMap id="user" type="world.keyi.domain.User">
+        <!--
+            id标签：对表中主键的映射
+            result标签:对表中非主键的映射
+            property属性：对应实体类中的属性
+            column属性：对应数据库表中的字段
+            表示：将数据库表中的指定的column字段，封装到实体类中的指定的property属性中
+        -->
+        <id property="username" column="username"/>
+        <result property="email" column="email"/>
+        <result property="password" column="password"/>
+        <result property="birthday" column="birthday"/>
+    </resultMap>
+
+    <!--
+        动态SQL
+        if标签判断传递的user对象中有无对应的属性，如果有则动态sql拼接，如果没有则pass掉
+        where标签能消除掉前面多余的and字符串(例如如果没带username值得话，就会多出一个and)
+    -->
+    <select id="getUserByCondition" resultMap="user">
+        select * from tb_user
+        <where>
+            <if test="username!=null and username!=''">
+                username = #{username}
+            </if>
+            <if test="password!=null">
+                and password=#{password}
+            </if>
+            <if test="email!=null">
+                and email=#{email}
+            </if>
+        </where>
+    </select>
+
+    <!--
+        使用foreach标签，遍历传递过来的list集合
+        collection：指定要遍历集合的key，在接口方法中已经指定使用"list"取出list集合:
+            List<User> getUsersByCondition(@Param("list") List<String> list);
+        close:以什么结束，作为sql语句拼接in语句的话，in (?,?,?),当然是以)结束
+        open:以什么开始，同上
+        item：指的是遍历集合中的每一个元素,如果list中元素是对象，则取对象的属性就是，item的值.对象属性值
+        separator:每次遍历的元素的分隔符
+        index：
+            如果遍历的是一个list集合，index表示的是当前的索引
+            如果遍历的是一个map集合，index表示的是当前遍历的元素的key
+
+    -->
+    <select id="getUsersByCondition" resultMap="user">
+        select * from tb_user where username in
+        <foreach collection="list" item="userName" separator="," index="i" open="(" close=")">
+            #{userName}
+        </foreach>
+    </select>
+</mapper>

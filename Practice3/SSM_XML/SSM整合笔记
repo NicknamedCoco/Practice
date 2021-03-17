@@ -1,0 +1,594 @@
+下面是Spring和SpringMVC整合步骤
+    1，导入依赖
+        <dependencies>
+            <!--使@Resource注解生效-->
+            <dependency>
+                <groupId>javax.annotation</groupId>
+                <artifactId>javax.annotation-api</artifactId>
+                <version>1.3.1</version>
+            </dependency>
+
+            <!--druid连接池依赖-->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid</artifactId>
+                <version>1.1.8</version>
+            </dependency>
+
+            <!--AspectJ依赖-->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-aspects</artifactId>
+                <version>5.0.0.RELEASE</version>
+            </dependency>
+
+            <!--
+                AspectJ依赖
+                <dependency>
+                    <groupId>org.aspectj</groupId>
+                    <artifactId>aspectjrt</artifactId>
+                    <version>1.8.5</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.aspectj</groupId>
+                    <artifactId>aspectjweaver</artifactId>
+                    <version>1.8.5</version>
+                </dependency>
+                <dependency>
+                    <groupId>aopalliance</groupId>
+                    <artifactId>aopalliance</artifactId>
+                    <version>1.0</version>
+                </dependency>
+            -->
+
+            <!--数据库jar包-->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>8.0.19</version>
+            </dependency>
+
+            <!--
+                JdbcTemplate依赖
+                它本身已经依赖了spring-tx，
+                所以使用JdbcTemplate时，可以完全去除spring-tx依赖
+            -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jdbc</artifactId>
+                <version>5.2.6.RELEASE</version>
+            </dependency>
+
+            <!--Spring事务管理jar包-->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-tx</artifactId>
+                <version>5.2.6.RELEASE</version>
+            </dependency>
+
+            <!--SpringMVC上传文件所需的依赖-->
+            <dependency>
+                <groupId>commons-fileupload</groupId>
+                <artifactId>commons-fileupload</artifactId>
+                <version>1.3.1</version>
+            </dependency>
+
+            <!--jackson-->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>2.9.6</version>
+            </dependency>
+
+            <!--springmvc项目依赖，会间接引入spring依赖-->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-webmvc</artifactId>
+                <version>5.2.6.RELEASE</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-logging</groupId>
+                <artifactId>commons-logging</artifactId>
+                <version>1.2</version>
+            </dependency>
+
+            <!--JSP依赖-->
+            <dependency>
+                <groupId>javax.servlet.jsp</groupId>
+                <artifactId>jsp-api</artifactId>
+                <version>2.1</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!--Servlet-->
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>4.0.1</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!--standard标签库，与jstl依赖一起使用-->
+            <dependency>
+                <groupId>taglibs</groupId>
+                <artifactId>standard</artifactId>
+                <version>1.1.2</version>
+            </dependency>
+            <!--JSTL表达式的依赖-->
+            <dependency>
+                <groupId>jstl</groupId>
+                <artifactId>jstl</artifactId>
+                <version>1.2</version>
+            </dependency>
+
+            <!--Hibernate-validator依赖，前端参数校验-->
+            <dependency>
+                <groupId>org.hibernate.validator</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>6.1.5.Final</version>
+            </dependency>
+
+            <!--测试依赖-->
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    2，创建Spring和SpringMVC的配置文件
+    3，在web.xml中配置springmvc的前端控制器(指定springmvc配置文件位置)，spring的监听器，
+        字符编码过滤器，转换请求方式过滤器(将post转换成put，delete请求)
+        <?xml version="1.0" encoding="UTF-8"?>
+        <web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+                 version="4.0">
+            <!--前端控制器-->
+            <servlet>
+                <servlet-name>dispatcherServlet</servlet-name>
+                <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+                <init-param>
+                    <param-name>contextConfigLocation</param-name>
+                    <param-value>classpath:springmvc.xml</param-value>
+                </init-param>
+                <load-on-startup>1</load-on-startup><!--该标签放最下面-->
+            </servlet>
+            <servlet-mapping>
+                <servlet-name>dispatcherServlet</servlet-name>
+                <url-pattern>/</url-pattern>
+            </servlet-mapping>
+
+            <!--字符编码过滤器，要配置在所有过滤器最前面-->
+            <filter>
+                <filter-name>characterEncodingFilter</filter-name>
+                <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+                <init-param>
+                    <param-name>encoding</param-name>
+                    <param-value>utf-8</param-value>
+                </init-param>
+                <init-param>
+                    <param-name>forceRequestEncoding</param-name>
+                    <param-value>true</param-value>
+                </init-param>
+                <init-param>
+                    <param-name>forceResponseEncoding</param-name>
+                    <param-value>true</param-value>
+                </init-param>
+            </filter>
+            <filter-mapping>
+                <filter-name>characterEncodingFilter</filter-name>
+                <url-pattern>/*</url-pattern>
+            </filter-mapping>
+
+            <!--spring容器创建监听器-->
+            <context-param>
+                <param-name>contextConfigLocation</param-name>
+                <param-value>classpath:spring.xml</param-value>
+            </context-param>
+            <listener>
+                <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+            </listener>
+
+            <!--转换请求方式过滤器-->
+            <filter>
+                <filter-name>hiddenHttpMethodFilter</filter-name>
+                <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+            </filter>
+            <filter-mapping>
+                <filter-name>hiddenHttpMethodFilter</filter-name>
+                <url-pattern>/*</url-pattern>
+            </filter-mapping>
+        </web-app>
+    4，在springmvc.xml(Springmvc子容器)中，增加名称空间，配置视图解析器，配置注解扫描Controller包，配置注解驱动，配置静态资源处理
+            名称空间
+            <beans xmlns="http://www.springframework.org/schema/beans"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns:p="http://www.springframework.org/schema/p"
+                   xmlns:util="http://www.springframework.org/schema/util"
+                   xmlns:context="http://www.springframework.org/schema/context"
+                   xmlns:aop="http://www.springframework.org/schema/aop"
+                   xmlns:tx="http://www.springframework.org/schema/tx"
+                   xmlns:mvc="http://www.springframework.org/schema/mvc"
+                   xsi:schemaLocation="http://www.springframework.org/schema/beans
+                                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                                        http://www.springframework.org/schema/util
+                                        http://www.springframework.org/schema/util/spring-util.xsd
+                                        http://www.springframework.org/schema/context
+                                        http://www.springframework.org/schema/context/spring-context.xsd
+                                        http://www.springframework.org/schema/aop
+                                        http://www.springframework.org/schema/aop/spring-aop.xsd
+                                        http://www.springframework.org/schema/tx
+                                        http://www.springframework.org/schema/tx/spring-tx.xsd
+                                        http://www.springframework.org/schema/mvc
+                                        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+            <!--默认视图解析器-->
+            <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+                <!--前缀，视图文件的路径-->
+                <property name="prefix" value="/WEB-INF/jsp/"></property>
+                <!--后缀，视图文件的扩展名-->
+                <property name="suffix" value=".jsp"></property>
+            </bean>
+
+            <!--只扫描包下@Controller和@ControllerAdvice-->
+            <context:component-scan base-package="world.keyi" use-default-filters="false" >
+                <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+                <context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+            </context:component-scan>
+
+            <!--注解驱动-->
+            <mvc:annotation-driven/>
+
+            <!--
+                spring定义了专门处理静态资源访问请求的处理器，ResourceHttpRequestHandler
+                静态资源处理,处理静态资源请求
+            -->
+            <mvc:resources mapping="/static/**" location="/static/"/>
+
+            <!--
+                springmvc容器还可以配置：
+                自定义视图解析器，自定义类型转换器，文件上传解析器，国际化资源管理配置，自定义区域解析器，拦截器
+                除此之外，springmvc还负责使用校验框架Hibernate-Validator做数据校验，处理异常等
+            -->
+    5，创建druid.properties文件，创建国际化资源文件
+        jdbc.url=jdbc:mysql://localhost:3306/oneforall?serverTimezone=GMT&useSSL=false&characterEncoding=utf-8
+        jdbc.driver=com.mysql.cj.jdbc.Driver
+        jdbc.username=root
+        jdbc.password=123765
+    6，AOP不需要在spring配置文件中配置，只需要创建代理类并在类中加入注解和通知即可
+        @Aspect
+        @Component
+        @EnableAspectJAutoProxy
+        @Order(0)
+        public class MyAspect {
+            @Pointcut("execution(* world.keyi.service.MyService.*(..))")
+            public void pointCut(){}
+
+            @Before("pointCut()")
+            public void before(){
+                System.out.println("前置通知");
+            }
+
+            @After("pointCut()")
+            public void after(){
+                System.out.println("after方法。。。。。。");
+            }
+
+            @AfterThrowing(value = "pointCut()",throwing = "e")
+            public void afterThrowing(Throwable e){
+                /*
+                    throwing属性表示使用该参数接收业务逻辑方法抛出的异常对象
+                 */
+                e.printStackTrace();
+                System.out.println("只有被增强方法发生异常时，我才会现身");
+            }
+
+            @AfterReturning(value = "pointCut()",returning = "result")
+            public void afterReturning(Object result){
+                /*
+                    returning属性表示使用该参数接收业务逻辑方法的返回值
+                 */
+                System.out.println("afterReturning方法。。。。。。。");
+            }
+
+            @Around("pointCut()")
+            public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
+                /*
+                    注意当JoinPoint参数和获取返回值的参数或者其他参数一起使用时，JoinPoint参数必须放在通知方法的参数列表前面
+                    JoinPoint参数可以用来获取被代理方法的信息，joinPoint.getSignature().getName()获取被代理方法的方法名
+
+                    环绕通知
+                    ProceedingJoinPoint是JoinPoint子接口，表示可以执行目标方法
+                        1，必须返回Object类型值
+                        2，必须接收一个参数，类型为ProceedingJoinPoint
+                        3,必须throws Throwable
+                 */
+
+                System.out.println("around方法之前。。。。。。。");
+                //代表实际方法被执行
+                Object result = joinPoint.proceed();
+                System.out.println("around方法之后。。。。。。。");
+                return result;
+            }
+
+        }
+    7，在applicationContext.xml(spring父容器)中，配置包扫描(排除@Controller),配置数据源，配置mybatis
+        配置事务管理器，开启事务管理驱动
+            <!--注解扫描排除@Controller和@ControllerAdvice-->
+            <context:component-scan base-package="world.keyi">
+                <context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+                <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+            </context:component-scan>
+
+            <!--
+                XML方式配置JDBCTemplate步骤如下:
+                    1)配置引入外部资源文件
+                    2)配置数据源,使用DruidDataSource类
+                    3)JDBCTemplate，并引入数据源
+                    4)在dao层自动装配即可使用
+            -->
+
+            <!--引入外部资源文件-->
+            <context:property-placeholder location="classpath:druid.properties"/>
+            <!--数据源-->
+            <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+                <property name="driverClassName" value="${jdbc.driver}"></property>
+                <property name="url" value="${jdbc.url}"></property>
+                <property name="username" value="${jdbc.username}"></property>
+                <property name="password" value="${jdbc.password}"></property>
+            </bean>
+            <!--JDBCTemplate-->
+            <!--<bean class="org.springframework.jdbc.core.JdbcTemplate">
+                <property name="dataSource" ref="dataSource"/>
+            </bean>-->
+            <!--mybatis.xml，创建sqlSessionFactory-->
+            <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+                <!--指定mybatis核心配置文件位置-->
+                <property name="configLocation" value="classpath:mybatis.xml"/>
+                <!--指定要使用的数据源-->
+                <property name="dataSource" ref="dataSource"/>
+                <!--指定mapper映射文件的位置-->
+                <property name="mapperLocations" value="classpath:mapper/*.xml"/>
+            </bean>
+            <!--将mybatis创建的dao接口实现类加入到spring容器中，路径为dao接口路径-->
+            <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+                <property name="basePackage" value="world.keyi.dao"/>
+            </bean>
+
+            <!--
+                配置注解AOP不需要在Spring容器中配置
+                实现步骤：
+                    1)创建自定义类，类上标注
+                        @Aspect，表示该类是切面类/增强类/代理类
+                        @Component，将该类加入spring容器中
+                        @EnableAspectJAutoProxy，自动生成代理对象，如果有配置类，则可以标注在配置类上
+                        @Order(0)，当有多个代理类时，设置代理类的优先级
+                    2)类中配置切入点和各个通知
+            -->
+
+            <!--
+                XML方式配置事务管理步骤:
+                    1)配置事务管理器
+                    2)开启事务注解驱动
+                        使用完全注解开发时，配置类代替spring的xml文件时，@EnableTransactionManagement注解用来开启事务注解驱动
+                    3)在service层的类上或方法上加@Transactional
+                        添加在类上表示对类中所有方法添加事务，添加到方法上表示对某个方法添加事务。
+            -->
+            <!--创建事务管理器-->
+            <bean id="transactionManager"
+                  class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+                <!--注入数据源-->
+                <property name="dataSource" ref="dataSource"></property>
+            </bean>
+            <!--开启事务注解驱动-->
+            <tx:annotation-driven transaction-manager="transactionManager"/>
+        </beans>
+    8，mybatis核心配置文件
+        <?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE configuration
+                PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-config.dtd">
+        <configuration>
+            <!--外部资源引用-->
+            <!--<properties resource="druid.properties"/>-->
+
+            <!--开启二级缓存-->
+            <!--<settings>
+                <setting name="cacheEnabled" value="true"/>
+            </settings>-->
+
+            <!--
+                别名设置，为javaBean起别名
+                默认别名是类名(不区分大小写)，也可以使用alias属性指定别名
+                配置好后，在其他任意位置都可以写别名了
+
+                批量起别名，name属性指定包的路径，表示为包中所有类起别名
+                批量起别名时，默认别名是类名，如果批量时想起别名，可以在类上设置@Alias注解，
+                表示为该类起别名
+            -->
+            <!--<typeAliases>
+                <typeAlias type="world.keyi.domain.User"/>
+
+                <package name="world.keyi.domain"/>
+            </typeAliases>-->
+
+
+            <!--配置环境变量-->
+            <!--<environments default="development">
+                <environment id="development">
+                    <transactionManager type="JDBC"/>
+                    <dataSource type="POOLED">
+                        <property name="driver" value="${jdbc.driver}"/>
+                        <property name="url" value="${jdbc.url}"/>
+                        <property name="username" value="${jdbc.username}"/>
+                        <property name="password" value="${jdbc.password}"/>
+                    </dataSource>
+                </environment>
+            </environments>-->
+
+            <!--数据库厂商标识-->
+            <!--
+                name:数据库厂商标识，value属性表示给这个标识取别名
+                使用时：在mapper映射文件中select或其他sql标签中设置databaseid属性，
+                指定在哪个数据库时执行该sql语句，没有该属性表示，任何数据库都能执行
+                <select id="findAll" resultType="User">
+                    select * from tb_user
+                </select>
+                <select id="findAll" resultType="User" databaseId="oracle">
+                    select * from tb_user
+                </select>
+                sql执行匹配规则：如果能精确匹配就精确匹配，不能就执行没有设置databaseid属性的sql
+            -->
+            <!--<databaseIdProvider type="DB_VENDOR">
+                <property name="MYSQL" value="mysql"/>
+                <property name="ORACLE" value="oracle"/>
+                <property name="Sql Server" value="sqlServer"/>
+            </databaseIdProvider>-->
+
+            <!--注册mapper映射文件-->
+            <!--
+                <mapper class=""/>
+                <mapper url=""/>
+                resource属性：从类路径下引入映射文件
+                url属性：从磁盘中或者网络中引用映射文件
+                class属性：写dao层接口的全类名，不过使用这种方式，
+                    需要将mapper映射文件放在和接口同包下，并且两个文件名字要相同
+                    你也可以直接在接口相应的方法上使用@Select注解等等，这样mybatis也能执行
+                    但是这种注解方式硬编码，不一定好
+
+                以上是单一文件注册，你也可以使用package标签批量注册
+                <package name=""/>
+            -->
+            <!--<mappers>
+                <mapper resource="mapper/UserDaoMapper.xml"/>
+                <mapper resource="mapper/KeyDaoMapper"/>
+                <mapper resource="mapper/LockDaoMapper"/>
+            </mappers>-->
+        </configuration>
+        SSM整合后，mybatis的核心配置文件几乎不需要什么配置
+    9，Mapper映射文件
+        <?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE mapper
+                PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+        <!--
+            namespace:接口的全类名。world.keyi.dao.UserDao
+            id：接口中要被实现的方法名
+            resultType：接口方法的返回值类型，全类名,增删改不用写返回值类型
+                mybatis自动判断，如果是数字，返回int类型，如果是boolean，影响0行返回false，否则返回true
+        -->
+        <mapper namespace="world.keyi.dao.UserDao">
+            <!--开启二级缓存-->
+            <!--<cache></cache>-->
+
+            <!--查询所有用户-->
+            <select id="findAllUser" resultType="world.keyi.domain.User">
+                select * from tb_user
+            </select>
+            <!--<select id="findAll" resultType="User" databaseId="oracle">
+                select * from tb_user
+            </select>-->
+
+            <!--传递多个参数查询用户-->
+            <select id="findUserByUsernameAndEmail" resultType="world.keyi.domain.User">
+                select * from tb_user where username=#{username} and email=#{email}
+            </select>
+
+            <!--查询一条数据，并将该条数据封装进map-->
+            <select id="findUserByUsernameReturnMap" resultType="map">
+                select * from tb_user where username=#{username}
+            </select>
+
+            <!--查询多条数据，并将多条数据封装进map返回-->
+            <select id="findAllReturnMap" resultType="world.keyi.domain.User">
+                select * from tb_user
+            </select>
+
+            <!--增加用户-->
+            <!--<insert id="addUser">
+                <selectKey keyProperty="" order="BEFORE">
+                    select max(id) from tb_user
+                </selectKey>
+                insert into tb_user values (#{username},#{password},#{email},#{birthday})
+            </insert>-->
+
+            <!--删除用户-->
+            <delete id="deleteUser">
+                delete from tb_user where email = #{email}
+            </delete>
+
+            <!--更新用户-->
+            <update id="updateUser">
+                update tb_user set username = #{username},password = #{password},birthday=#{birthday}
+                where email=#{email}
+            </update>
+
+            <!--
+                自定义结果映射，封装结果集
+                type属性：指定查询出的数据要封装的类型
+                id属性：唯一标识
+            -->
+            <resultMap id="user" type="world.keyi.domain.User">
+                <!--
+                    id标签：对表中主键的映射
+                    result标签:对表中非主键的映射
+                    property属性：对应实体类中的属性
+                    column属性：对应数据库表中的字段
+                    表示：将数据库表中的指定的column字段，封装到实体类中的指定的property属性中
+                -->
+                <id property="username" column="username"/>
+                <result property="email" column="email"/>
+                <result property="password" column="password"/>
+                <result property="birthday" column="birthday"/>
+            </resultMap>
+
+            <!--
+                动态SQL
+                if标签判断传递的user对象中有无对应的属性，如果有则动态sql拼接，如果没有则pass掉
+                where标签能消除掉前面多余的and字符串(例如如果没带username值得话，就会多出一个and)
+            -->
+            <select id="getUserByCondition" resultMap="user">
+                select * from tb_user
+                <where>
+                    <if test="username!=null and username!=''">
+                        username = #{username}
+                    </if>
+                    <if test="password!=null">
+                        and password=#{password}
+                    </if>
+                    <if test="email!=null">
+                        and email=#{email}
+                    </if>
+                </where>
+            </select>
+
+            <!--
+                使用foreach标签，遍历传递过来的list集合
+                collection：指定要遍历集合的key，在接口方法中已经指定使用"list"取出list集合:
+                    List<User> getUsersByCondition(@Param("list") List<String> list);
+                close:以什么结束，作为sql语句拼接in语句的话，in (?,?,?),当然是以)结束
+                open:以什么开始，同上
+                item：指的是遍历集合中的每一个元素,如果list中元素是对象，则取对象的属性就是，item的值.对象属性值
+                separator:每次遍历的元素的分隔符
+                index：
+                    如果遍历的是一个list集合，index表示的是当前的索引
+                    如果遍历的是一个map集合，index表示的是当前遍历的元素的key
+
+            -->
+            <select id="getUsersByCondition" resultMap="user">
+                select * from tb_user where username in
+                <foreach collection="list" item="userName" separator="," index="i" open="(" close=")">
+                    #{userName}
+                </foreach>
+            </select>
+        </mapper>
+    10，总结：
+        1)这个项目是SSM整合的，spring容器为父容器，springmvc为子容器
+            子容器可以依赖注入父容器中的对象，反之则不行。
+        2)spring容器主要工作：AOP配置，mybatis配置，事务管理，数据源
+            springmvc主要工作：数据校验，静态资源处理，视图解析，文件上传，国际化，异常处理
+            拦截器配置，参数类型转换配置等
+            mybatis：连接第三方缓存框架，配置分页插件等
+        3)这个项目整合还不是最好的方式，在没学springboot之前，最好的方式是使用配置类代替各个配置文件

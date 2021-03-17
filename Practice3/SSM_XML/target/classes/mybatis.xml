@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--外部资源引用-->
+    <!--<properties resource="druid.properties"/>-->
+
+    <!--开启二级缓存-->
+    <!--<settings>
+        <setting name="cacheEnabled" value="true"/>
+    </settings>-->
+
+    <!--
+        别名设置，为javaBean起别名
+        默认别名是类名(不区分大小写)，也可以使用alias属性指定别名
+        配置好后，在其他任意位置都可以写别名了
+
+        批量起别名，name属性指定包的路径，表示为包中所有类起别名
+        批量起别名时，默认别名是类名，如果批量时想起别名，可以在类上设置@Alias注解，
+        表示为该类起别名
+    -->
+    <!--<typeAliases>
+        <typeAlias type="world.keyi.domain.User"/>
+
+        <package name="world.keyi.domain"/>
+    </typeAliases>-->
+
+
+    <!--配置环境变量-->
+    <!--<environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>-->
+
+    <!--数据库厂商标识-->
+    <!--
+        name:数据库厂商标识，value属性表示给这个标识取别名
+        使用时：在mapper映射文件中select或其他sql标签中设置databaseid属性，
+        指定在哪个数据库时执行该sql语句，没有该属性表示，任何数据库都能执行
+        <select id="findAll" resultType="User">
+            select * from tb_user
+        </select>
+        <select id="findAll" resultType="User" databaseId="oracle">
+            select * from tb_user
+        </select>
+        sql执行匹配规则：如果能精确匹配就精确匹配，不能就执行没有设置databaseid属性的sql
+    -->
+    <!--<databaseIdProvider type="DB_VENDOR">
+        <property name="MYSQL" value="mysql"/>
+        <property name="ORACLE" value="oracle"/>
+        <property name="Sql Server" value="sqlServer"/>
+    </databaseIdProvider>-->
+
+    <!--注册mapper映射文件-->
+    <!--
+        <mapper class=""/>
+        <mapper url=""/>
+        resource属性：从类路径下引入映射文件
+        url属性：从磁盘中或者网络中引用映射文件
+        class属性：写dao层接口的全类名，不过使用这种方式，
+            需要将mapper映射文件放在和接口同包下，并且两个文件名字要相同
+            你也可以直接在接口相应的方法上使用@Select注解等等，这样mybatis也能执行
+            但是这种注解方式硬编码，不一定好
+
+        以上是单一文件注册，你也可以使用package标签批量注册
+        <package name=""/>
+    -->
+    <!--<mappers>
+        <mapper resource="mapper/UserDaoMapper.xml"/>
+        <mapper resource="mapper/KeyDaoMapper"/>
+        <mapper resource="mapper/LockDaoMapper"/>
+    </mappers>-->
+</configuration>
