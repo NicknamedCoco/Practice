@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+    namespace:接口的全类名。
+    id：接口中要被实现的方法名
+    resultType：接口方法的返回值类型，全类名,增删改不用写返回值类型
+    mybatis自动判断，如果是数字，返回int类型，如果是boolean，影响0行返回false，否则返回true
+-->
+<mapper namespace="world.keyi.mapper.OrderMapper">
+    <resultMap id="order" type="world.keyi.bean.Order">
+        <id property="id" column="id"/>
+        <result property="doorId" column="door_id"/>
+        <result property="orderNo" column="order_no"/>
+        <result property="orderType" column="order_type"/>
+        <result property="pnum" column="pnum"/>
+        <result property="cashier" column="cashier"/>
+        <result property="orderTime" column="order_time"/>
+        <result property="payTime" column="pay_time"/>
+        <result property="payType" column="pay_type"/>
+        <result property="price" column="price"/>
+        <!--分步查询-->
+        <association property="door" column="door_id" select="world.keyi.mapper.DoorMapper.getDoorById" fetchType="lazy"/>
+    </resultMap>
+
+    <select id="getAllOrder" resultMap="order">
+        select * from tb_order
+    </select>
+
+    <insert id="addOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_order(door_id, order_no, order_type, pnum, cashier, order_time, pay_time, pay_type, price)
+            VALUES(#{doorId},#{orderNo},#{orderType},#{pnum},#{cashier},#{orderTime},#{payTime},#{payType},#{price})
+    </insert>
+
+    <delete id="deleteOrder">
+        delete from tb_order where id=#{id}
+    </delete>
+
+    <select id="getOrderById" resultMap="order">
+        select * from tb_order where id=#{id}
+    </select>
+
+    <update id="updateOrder" useGeneratedKeys="true" keyProperty="id">
+        update tb_order set door_id=#{doorId},order_no=#{orderNo},order_type=#{orderType},pnum=#{pnum},
+            cashier=#{cashier},order_time=#{orderTime},pay_time=#{payTime},pay_type=#{payType},price=#{price}
+            where id=#{id}
+    </update>
+</mapper>

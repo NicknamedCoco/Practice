@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+    namespace:接口的全类名。world.keyi.dao.UserDao
+    id：接口中要被实现的方法名
+    resultType：接口方法的返回值类型，全类名,增删改不用写返回值类型
+    mybatis自动判断，如果是数字，返回int类型，如果是boolean，影响0行返回false，否则返回true
+-->
+<mapper namespace="world.keyi.mapper.DoorMapper">
+
+    <select id="getDoorById" resultType="world.keyi.bean.Door">
+        select * from tb_door where id = #{id}
+    </select>
+
+    <select id="getAllDoor" resultType="world.keyi.bean.Door">
+        select * from tb_door
+    </select>
+
+    <insert id="addDoor" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_door(name, tel, addr) values(#{name},#{tel},#{addr})
+    </insert>
+
+    <delete id="deleteDoor">
+        delete from tb_door where id=#{id}
+    </delete>
+
+    <update id="updateDoor">
+        update tb_door set name=#{name},tel=#{tel},addr=#{addr} where id=#{id}
+    </update>
+
+</mapper>
