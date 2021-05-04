@@ -1,0 +1,2 @@
+搭建一下springboot项目的基本配置，防止以后忘记
+该项目配置了，druid数据源,前端验证码，spring security加密数据库字段，mybatisPlus分页插件查询

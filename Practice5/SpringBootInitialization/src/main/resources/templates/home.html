@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>主页</title>
+</head>
+<body>
+    <span>[[${loginResult}]]</span><br>
+    <span>用户名：[[${session.user.username}]]</span><br>
+    <a th:href="@{/users}">查询数据库中信息</a>
+</body>
+</html>

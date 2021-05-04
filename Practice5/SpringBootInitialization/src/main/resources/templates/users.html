@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!--suppress ALL-->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>展示用户信息</title>
+    <style>
+        li{
+            display: inline;
+            padding-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <table border="2px" align="center">
+    <thead>
+    <tr>
+        <th>序号</th>
+        <th>用户名</th>
+        <th>密码</th>
+        <th>邮箱</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:class="${status.even}?'even':'odd'" th:each="u,status:${page.records}">
+        <td th:text="${status.count}"></td>
+        <td th:text="${u.username}"></td>
+        <td th:text="${u.password}"></td>
+        <td th:text="${u.email}"></td>
+    </tr>
+    </tbody>
+    </table>
+    <div align="center" th:border="2">
+        <ul style="padding: 0;">
+            <li>当前页码:[[${page.current}]]</li>
+            <li>总页码:[[${page.pages}]]</li>
+            <li>总记录数:[[${page.total}]]</li>
+            <!--将页码遍历，从1到总页码-->
+            <li  th:each="num:${#numbers.sequence(1,page.pages)}">
+                <a th:href="@{/users(pageNum=${num})}">[[${num}]]</a>&nbsp;
+            </li>
+            <!--thymeleaf携带参数使用小括号()-->
+            <li><a th:href="@{/users}">首页</a></li>
+            <li><a th:href="@{/users(pageNum=${page.current}-1)}">上一页</a></li>
+            <li><a th:href="@{/users(pageNum=${page.current}+1)}">下一页</a></li>
+        </ul>
+    </div>
+</body>
+</html>

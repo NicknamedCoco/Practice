@@ -1,0 +1,72 @@
+spring:
+  #配置数据源，druid数据源和监控页
+  datasource:
+    url: jdbc:mysql://localhost:3306/bootdb?
+      serverTimezone=GMT&useSSL=false&characterEncoding=utf-8
+    username: root
+    password: 123765
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+    druid:
+      #开启监控和防火墙功能
+      filters: stat,wall
+
+      #设置单个filter功能细节
+      filter:
+        wall:
+          config:
+            drop-table-allow: false
+
+      #监控页的配置,登录信息
+      stat-view-servlet:
+        enabled: true
+        login-username: 万一
+        login-password: 8008208820
+
+      #配置监控页中的Web应用
+      web-stat-filter:
+        enabled: true
+        url-pattern: /*
+        exclusions: '*.js,*.jpg,*.css,/druid/*'
+
+      #开启监控页中的spring监控功能，监控spring这个包下的所有组件
+      aop-patterns: world.keyi.*
+
+
+  #配置请求方式转换过滤器,关闭thymeleaf缓存
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  thymeleaf:
+    cache: false
+
+  #配置静态资源目录，默认是resources/static,public
+  #web:
+  #  resources:
+  #    static-locations:
+
+  #security登录设置
+  #security:
+  #  user:
+  #    name: wanyi
+  #    password:
+
+
+#tomcat端口信息,项目访问目录
+server:
+  port: 8080
+  servlet:
+    context-path: /keyi
+
+#指标监控的设置
+management:
+  endpoints:
+    enabled-by-default: true  #默认开启所有endpoint(功能)
+    web:
+      exposure:
+        include: '*'  #以web形式暴露所有端点(开启所有功能)
+
+  endpoint:
+    health:
+      show-details: always   #开启健康详细报告

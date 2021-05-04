@@ -1,0 +1,237 @@
+搭建一下springboot项目的基本配置，防止以后忘记
+该项目配置了，druid数据源,前端验证码，spring security加密数据库字段，mybatisPlus分页插件查询
+导入依赖
+    <dependencies>
+        <!--springboot的指标监控-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!--druid连接池依赖-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>1.1.17</version>
+        </dependency>
+
+        <!--mybatis-plus场景包-->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.4.1</version>
+        </dependency>
+
+        <!--spring-data,数据库场景启动器-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jdbc</artifactId>
+        </dependency>
+
+        <!--thymeleaf模板引擎-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+
+        <!--后端验证框架，hibernate-validation-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!--web依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!--mysql驱动-->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!--servlet依赖-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
+
+        <!--
+            注解处理器
+            https://blog.csdn.net/weixin_43328357/article/details/106993172
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!--lombok依赖-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!--测试依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+
+1，增加HappyCaptcha，前端验证码
+    1)导入依赖
+        <dependency>
+          <groupId>com.ramostear</groupId>
+          <artifactId>Happy-Captcha</artifactId>
+          <version>1.0.1</version>
+        </dependency>
+    2)前端设置img标签，请求后端控制器，获得验证码图片
+        验证码:<input type="text" name="code" placeholder="请输入验证码"/>
+            <img th:src="@{/captcha}"/>
+    3)后端页面设置controller，验证码生成
+        @Controller
+        public class HappyCaptchaController {
+            @GetMapping("/captcha")
+            public void happyCaptcha(HttpServletRequest request, HttpServletResponse response){
+                HappyCaptcha.require(request,response).build().finish();
+            }
+        }
+    4)验证
+        @ResponseBody
+        @RequestMapping("/login")
+        public User login(User userPO, String code, HttpServletRequest request){
+            boolean flag = HappyCaptcha.verification(request, code, true);
+            if (flag){
+                System.out.println("登录成功");
+            }
+            return userPO;
+        }
+
+2，设置mysql中password字段加密
+    1)导入了spring security依赖
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        底层默认使用Bcrypt算法加密数据，如果你想使用argon2算法加密数据，则还需要导入
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>1.64</version>
+        </dependency>
+    2)注册PasswordEncoder组件
+        @Bean
+        public PasswordEncoder passwordEncoder(){
+            return new BCryptPasswordEncoder();
+        }
+        或者是Argon2PasswordEncoder
+    3)使用BCryptPasswordEncoder的encode(CharSequence rawPassword)方法进行加密，
+        使用matches(CharSequence rawPassword, String encodedPassword)方法进行匹配密码正确性
+    4)注意:使用security场景依赖，会引入一个默认的登录页，你可以通过以下配置设置登录页的账号密码
+        @Configuration
+        public class SecurityConfig extends WebSecurityConfigurerAdapter {
+            /*
+                BCryptPasswordEncoder加密
+            */
+            @Bean
+            public PasswordEncoder passwordEncoder(){
+                return new BCryptPasswordEncoder();
+            }
+
+            /*
+            *  配置用户名，密码
+            * */
+            @Override
+            protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+
+                //这里的配置会覆盖properties配置文件中配置的账号密码
+                auth.inMemoryAuthentication().withUser("万一")
+                        .password("$2a$10$6OrwgCJE2RcHGdikIQS4yewYtTj5tKl2.esWzkMvG9vKF8S5mcU4y").roles("admin")
+                        .and().withUser("一万")
+                        .password("$2a$10$6OrwgCJE2RcHGdikIQS4yewYtTj5tKl2.esWzkMvG9vKF8S5mcU4y").roles("user");
+                // 配置多个使用and连接，一个就不用加and()
+            }
+        }
+        或者在springboot的配置文件中配置如下项
+          #security登录设置
+        spring:
+          security:
+            user:
+              name: wanyi
+              password:$2a$10$6OrwgCJE2RcHGdikIQS4yewYtTj5tKl2.esWzkMvG9vKF8S5mcU4y
+        密码必须是经过PasswordEncoder编码
+
+3，配置mybatisPlus分页
+    请查看本人博客，www.keyi.world
+
+4，配置druid数据库连接池
+    1)导入druid依赖
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>1.1.17</version>
+        </dependency>
+    2)注册组件
+        @Configuration
+        public class MyDataSource {
+
+            /*
+                配置druid数据源
+        	    这会导致底层默认使用的HikariDataSource无效，因为@ConditionalOnMissingBean(DataSource.class)
+
+                @ConfigurationProperties("spring.datasource")的意思是
+                使得DruidDataSource中各个属性与配置文件中的spring.datasource进行绑定
+            */
+            @ConfigurationProperties("spring.datasource")
+            @Bean
+            public DataSource dataSource(){
+                return new DruidDataSource();
+            }
+        }
+    3)此时数据源已经配置完毕，如果还想设置druid的监控页，则在springboot配置文件中配置如下项
+        spring:
+          #配置数据源，druid数据源和监控页
+          datasource:
+            url: jdbc:mysql://localhost:3306/bootdb?
+              serverTimezone=GMT&useSSL=false&characterEncoding=utf-8
+            username: root
+            password: 123765
+            driver-class-name: com.mysql.cj.jdbc.Driver
+
+            druid:
+              #开启监控和防火墙功能
+              filters: stat,wall
+
+              #设置单个filter功能细节
+              filter:
+                wall:
+                  config:
+                    drop-table-allow: false
+
+              #监控页的配置,登录信息
+              stat-view-servlet:
+                enabled: true
+                login-username: 万一
+                login-password: 8008208820
+
+              #配置监控页中的Web应用
+              web-stat-filter:
+                enabled: true
+                url-pattern: /*
+                exclusions: '*.js,*.jpg,*.css,/druid/*'
+
+              #开启监控页中的spring监控功能，监控spring这个包下的所有组件
+              aop-patterns: world.keyi.*
+
+
+
+
+
+
