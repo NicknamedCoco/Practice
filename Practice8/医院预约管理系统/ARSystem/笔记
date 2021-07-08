@@ -1,0 +1,110 @@
+1，执行sql语句，创建好数据库
+2，在配置文件中配置druid数据源
+3，编写entity
+4，创建mapper接口及xml映射文件
+5，创建service接口及其实现类
+6，配置统一输出工具类，Result,ResultGenerator
+7，简单的做个查询功能，查看数据库配置及其它文件是否配置成功
+8，配置MD5加密工具类，验证码工具类
+9，编写登录功能，配置登录拦截器
+    这一部分有很多内容，比如自定义异常，自定义注解，Token检查,解决跨域问题等等。
+10，写完的
+        再次学习VO,DO等
+        管理员角色:
+            管理员列表：查询所有管理员，增批量删改管理员，搜索管理员
+            医生列表：查询所有医生，增批量删改医生，重置医生密码，搜索医生
+            患者列表：查询所有患者，增批量删改患者，重置患者密码，搜索患者
+            科室管理：查询所有科室，增批量删改科室信息
+
+    未写完的：
+        医生角色:
+            挂号列表：查询该医生下的所有挂号信息，registration表和user表联合查询
+            问答系统：查询患者信息和该患者的问题，user表和questions表联合查询
+        患者角色:
+            医生列表：查询所有医生，搜索医生
+            我要挂号：挂号功能要查询所有医生和科室信息显示到页面，该页面提交数据到registration表中
+            挂号列表：挂号列表查询的是自己所有的挂号信息，搜索指定的挂号信息
+            病例管理：查询该患者的病例信息，搜索指定的病例信息
+            我要问医生：向questions表保存数据
+            医生回答：
+
+
+
+生日显示功能
+@EqualsAndHashCode(callSuper = true)注解
+@Accessors(chain = true)注解
+LocalDateTime与Date的区别，LocalDate
+@JsonFormat(pattern = "yyyy-MM-dd")
+@DateTimeFormat(pattern = "yyyy-MM-dd")
+
+@RequestBody的使用，不能使用在put请求,放屁
+
+医生在删除的时候，应该把挂号表信息删除
+
+@jsonFormat注解的使用，以及自定义消息转换器
+
+TO_DAYS函数 返回一个天数! 啊哈？什么天数? 从年份0开始的天数
+
+在不加 WHERE 限制条件的情况下，COUNT(*) 与 COUNT(COL) 基本可以认为是等价的，但是在有 WHERE 限制条件的情况下，COUNT(*) 会比 COUNT(COL) 快非常多
+
+Math.random()：产生一个[0，1)之间的随机数。
+
+
+
+生成验证码
+    依赖
+        <dependency>
+            <groupId>com.github.penggle</groupId>
+            <artifactId>kaptcha</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+    controller
+        @Autowired
+        private DefaultKaptcha captchaProducer;
+
+        @GetMapping("/login/kaptcha")
+        public void defaultKaptcha(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
+            byte[] captchaOutputStream = null;
+            ByteArrayOutputStream imgOutputStream = new ByteArrayOutputStream();
+            try {
+                //生产验证码字符串并保存到session中
+                String verifyCode = captchaProducer.createText();
+                httpServletRequest.getSession().setAttribute("verifyCode", verifyCode);
+                BufferedImage challenge = captchaProducer.createImage(verifyCode);
+                ImageIO.write(challenge, "jpg", imgOutputStream);
+            } catch (IllegalArgumentException e) {
+                httpServletResponse.sendError(HttpServletResponse.SC_NOT_FOUND);
+                return;
+            }
+            captchaOutputStream = imgOutputStream.toByteArray();
+            httpServletResponse.setHeader("Cache-Control", "no-store");
+            httpServletResponse.setHeader("Pragma", "no-cache");
+            httpServletResponse.setDateHeader("Expires", 0);
+            httpServletResponse.setContentType("image/jpeg");
+            ServletOutputStream responseOutputStream = httpServletResponse.getOutputStream();
+            responseOutputStream.write(captchaOutputStream);
+            responseOutputStream.flush();
+            responseOutputStream.close();
+        }
+    config配置
+        @Component
+        public class KaptchaConfig {
+            @Bean
+            public DefaultKaptcha getDefaultKaptcha(){
+                com.google.code.kaptcha.impl.DefaultKaptcha defaultKaptcha = new com.google.code.kaptcha.impl.DefaultKaptcha();
+                Properties properties = new Properties();
+                properties.put("kaptcha.border", "no");
+                properties.put("kaptcha.textproducer.font.color", "black");
+                properties.put("kaptcha.image.width", "150");
+                properties.put("kaptcha.image.height", "40");
+                properties.put("kaptcha.textproducer.font.size", "30");
+                properties.put("kaptcha.session.key", "verifyCode");
+                properties.put("kaptcha.textproducer.char.space", "5");
+                Config config = new Config(properties);
+                defaultKaptcha.setConfig(config);
+                return defaultKaptcha;
+            }
+        }
+
+
+

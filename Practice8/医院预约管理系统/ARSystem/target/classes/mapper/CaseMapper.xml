@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="world.keyi.arsystem.mapper.CaseMapper">
+
+    <resultMap id="BaseResultMap" type="world.keyi.arsystem.entity.Case">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="patients_id" jdbcType="INTEGER" property="patientsId" />
+        <result column="doctor_id" jdbcType="INTEGER" property="doctorId" />
+        <result column="remake" jdbcType="VARCHAR" property="remake" />
+        <result column="recipe" jdbcType="VARCHAR" property="recipe" />
+        <result column="create_time" jdbcType="DATE" property="createTime" />
+        <result column="modify_time" jdbcType="DATE" property="modifyTime" />
+    </resultMap>
+    <select id="queryList" resultType="world.keyi.arsystem.entity.Case">
+        select c.*,p.nick_name as patientName,p.ssex,p.birthday,dept.dep_name as depName,d.nick_name as doctorName 
+            from t_case c
+            left join t_user p on c.patients_id=p.user_id
+            left join t_user d on c.doctor_id=d.user_id
+            left join t_department dept on d.dep_id=dept.id
+        <where>
+            p.role_id=2 and d.role_id=1
+            <if test="cases.patientName != null and cases.patientName != ''">
+                and p.nick_name=#{cases.patientName,jdbcType=VARCHAR}
+            </if>
+            <if test="cases.doctorName != null and cases.doctorName != ''">
+                and d.nick_name=#{cases.doctorName,jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by c.create_time
+    </select>
+    <select id="queryListByPatient" resultType="world.keyi.arsystem.entity.Case">
+        select c.*,p.nick_name as patientName,p.ssex,p.birthday,dept.dep_name as depName,d.nick_name as doctorName
+        from t_case c
+        left join t_user p on c.patients_id=p.user_id
+        left join t_user d on c.doctor_id=d.user_id
+        left join t_department dept on d.dep_id=dept.id
+        <where>
+            p.role_id=2 and d.role_id=1
+            <if test="cases.patientName != null and cases.patientName != ''">
+                and p.nick_name=#{cases.patientName,jdbcType=VARCHAR}
+            </if>
+            <if test="cases.doctorName != null and cases.doctorName != ''">
+                and d.nick_name=#{cases.doctorName,jdbcType=VARCHAR}
+            </if>
+            <if test="userId != null">
+                and c.patients_id=#{userId,jdbcType=INTEGER}
+            </if>
+        </where>
+        order by c.create_time
+    </select>
+
+</mapper>

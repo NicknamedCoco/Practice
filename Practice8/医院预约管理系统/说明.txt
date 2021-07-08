@@ -1,0 +1,5 @@
+本项目是前后端分离的医院预约管理系统
+前端：frontend
+后端：ARSystem
+个人主要写后端项目，使用mybatisPlus+springboot
+有一些跨域的解决方法和文件上传功能，还是有很多可以学的东西。
