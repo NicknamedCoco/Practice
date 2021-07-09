@@ -44,7 +44,6 @@ public class CommonController {
         表单校验 新增用户时验证库里是否有重复用户名
      */
     @GetMapping("/checkUsername/{username}")
-    @LoginToken
     public Object checkUsername(@PathVariable String username){
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
         userQueryWrapper.eq("username",username);

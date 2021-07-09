@@ -71,3 +71,13 @@ file:
   localPath: C:/Users/OneForAll/Desktop/img
   requestPath: /image/avatar
   imagePath: file:C:/Users/OneForAll/Desktop/img/
+
+
+qiniu:
+  accessKey: Vs_lraRs8TqZkD6Q7cf1DP423V73LQ028ECdu4i1
+  secretKey: B5fOIShJmAq2FwldQcf_hwpi2UOVXe4a4qmuVGz1
+  # 对象储存
+  bucket: arsystem-image # 空间名称
+  domain: qvz6wnlzl.hn-bkt.clouddn.com # 访问域名
+  #图片后缀，本项目个人问题
+  suffix: jpg

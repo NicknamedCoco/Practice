@@ -1,6 +1,5 @@
 package world.keyi.arsystem.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,8 @@ import world.keyi.arsystem.utils.TokenUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -77,19 +78,37 @@ public class LoginController {
 
     //registerPatients，注册病人，给参数
     @PostMapping("/registerPatients")
-    public String registerPatients() {
-        return "";
+    public Result registerPatients(User user) {
+        user.setPassword(MD5Util.MD5Encode(user.getPassword(),"utf-8"));
+        user.setCreateTime(new Date());
+        user.setRoleId(2);
+        userService.save(user);
+        return ResultGenerator.genSuccessResult();
     }
 
     //registerDoctor，注册医生,给参数
     @PostMapping("/registerDoctor")
-    public String registerDoctor() {
-        return "";
+    public Result registerDoctor(User user) {
+        user.setPassword(MD5Util.MD5Encode(user.getPassword(),"utf-8"));
+        user.setCreateTime(new Date());
+        user.setRoleId(1);
+        userService.save(user);
+        return ResultGenerator.genSuccessResult();
     }
 
     //forgotPassword，忘记密码，给参数
     @PutMapping("/forgotPassword")
-    public String forgotPassword() {
-        return "";
+    public Result forgotPassword(User sysUser) {
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+        userQueryWrapper.eq("username",sysUser.getUsername());
+        User user = userService.getOne(userQueryWrapper);
+        if (ObjectUtils.isNotEmpty(user)){
+            sysUser.setUserId(user.getUserId());
+            sysUser.setPassword(MD5Util.MD5Encode(sysUser.getPassword(),"utf-8"));
+            userService.updateById(sysUser);
+            return  ResultGenerator.genSuccessResult();
+        }else {
+            return ResultGenerator.genErrorResult(201,"请输入正确的用户名");
+        }
     }
 }

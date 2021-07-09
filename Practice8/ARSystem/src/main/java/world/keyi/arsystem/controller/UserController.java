@@ -22,6 +22,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private QiniuUtil qiniuUtil;
+
     /*
         查询用户列表，给参数
      */
@@ -146,7 +149,9 @@ public class UserController {
      */
     @PostMapping("/profile/avatar")
     public Result uploadAvatar(@RequestParam("avatarfile") MultipartFile file, HttpServletRequest request){
-        Integer userId = TokenUtil.getAdminUserId(request.getHeader("Authorization"));
+
+        //上传到本地
+        /*Integer userId = TokenUtil.getAdminUserId(request.getHeader("Authorization"));
         Map<String, Object> map = UploadFileUtil.uploadImage(file);
         if ((int) (map.get("status"))==200&&(boolean)map.get("isImage")){
             User user = new User();
@@ -156,7 +161,16 @@ public class UserController {
             return ResultGenerator.genSuccessResult(map.get("requestUrl"));
         }else {
             return ResultGenerator.genFailResult("图片上传失败");
-        }
+        }*/
+
+        //上传到七牛云
+        Integer userId = TokenUtil.getAdminUserId(request.getHeader("Authorization"));
+        User user = new User();
+        user.setUserId(userId);
+        String requestUrl = qiniuUtil.uploadFile(file);
+        user.setAvatar("http://"+requestUrl);
+        userService.updateById(user);
+        return ResultGenerator.genSuccessResult(requestUrl);
     }
 
     /*

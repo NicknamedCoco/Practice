@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.Random;
 
 /**
- * 发票工具类
+ * 发票工具类，生成发票的发票号和发票代码，getRandom
  */
 public class OrderSnUtil {
 

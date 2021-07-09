@@ -56,6 +56,8 @@ public class User implements Serializable {
 
     private Date modifyTime;           //修改时间
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birthday;              //生日
 
     @TableField(exist = false)
