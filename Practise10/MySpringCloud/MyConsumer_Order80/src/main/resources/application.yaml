@@ -1,0 +1,19 @@
+server:
+  port: 80
+spring:
+  application:
+    name: MyConsumerOrder80
+  #zipkin和sleuth是链路追踪的配置，zipkin展示数据，sleuth用来收集数据，链路追踪指的是监控一条请求所走过的服务
+  zipkin:
+    base-url: http://localhost:9411
+  sleuth:
+    sampler:
+      probability: 1
+
+eureka:
+  client:
+    register-with-eureka: true  #是否注册进服务注册中心
+    fetchRegistry: true   # 是否从服务注册中心抓取已有的注册信息，默认为true，单节点无所谓，集群必须设置为true才能配合ribbon使用负载均衡
+    service-url:  # 服务注册中心的地址
+      defaultZone: http://localhost:7001/eureka  # 单机版
+#      defaultZone: http://eureka7001:7001/eureka,http://eureka7002:7002/eureka  # 集群版

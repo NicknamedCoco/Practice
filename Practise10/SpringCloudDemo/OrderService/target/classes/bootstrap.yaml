@@ -1,0 +1,85 @@
+server:
+  port: 2346
+spring:
+  datasource:
+    username: root
+    password: 123765
+    url: jdbc:mysql://localhost:3306/springcloud_order?serverTimezone=GMT&useSSL=false&characterEncoding=utf-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  application:
+    name: OrderService
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 47.98.138.53:8848
+        cluster-name: HZ
+        namespace: a3a5fee0-15a2-4023-894c-34fbde0f5138
+      config:
+        server-addr: 47.98.138.53:8848
+        file-extension: yaml
+        namespace: a3a5fee0-15a2-4023-894c-34fbde0f5138
+
+    #sentinel-1
+    sentinel:
+      transport:
+        dashboard: localhost:8080
+        port: 8719  #默认8719端口，假如被占用会自动从8719开始依次+1扫描，直到找到未被占用的端口
+        clientIp: localhost #这里的port和clientIp指的是sentinel server，接收sentinel dashboard的数据并将规则数据注册到sentinel进程中
+#sentinel-2
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    sentinel:
+      enabled: true		#开启actuator对sentinel的支持
+
+feign:
+  client:
+    config:
+      default:  #全局设置为default,可以填其他微服务名称
+        # ribbon的超时时间，默认等待1秒，得不到爆错，所以重新设置超时时间
+        connectTimeout: 5000  # 指的是建立连接所用的时间，适用于网路状况正常情况下，两端连接所用的时间
+        readTimeout: 5000   # 指的是建立连接后从服务器读取到可用资源所用的时间
+        loggerLevel: full #日志级别
+  #sentinel与feign整合需要开启
+  sentinel:
+    enabled: true
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+# seata的配置，用于找到seata-server(TC)的服务实例和配置文件信息
+seata:
+  enabled: true
+  enable-auto-data-source-proxy: true
+  tx-service-group: seata-demo
+  data-source-proxy-mode: AT
+  config:
+    type: nacos
+    nacos:
+      server-addr: 47.98.138.53:8848
+      group: SEATA_GROUP
+      namespace: a3a5fee0-15a2-4023-894c-34fbde0f5138
+      dataId: client.properties
+      username: nacos
+      password: nacos
+  #配置的是TC的服务在nacos上的地址
+  registry:
+    type: nacos
+    nacos:
+      application: SeataServer    #TC服务名称
+      server-addr: 47.98.138.53:8848
+      group: DEFAULT_GROUP    #TC所在的组，需要与业务微服务同组
+      namespace: a3a5fee0-15a2-4023-894c-34fbde0f5138
+      username: nacos
+      password: nacos
+  service:
+    vgroup-mapping:
+      seata-demo: HZ    # 事务组与nacos中集群的映射关系，集群指的是TC所在的集群
+    disable-global-transaction: false

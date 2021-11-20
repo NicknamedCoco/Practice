@@ -1,0 +1,33 @@
+server:
+  port: 80
+spring:
+  application:
+    name: MyConsumerFeignWithHystrix
+eureka:
+  client:
+    register-with-eureka: true
+    fetchRegistry: true
+    service-url:
+      defaultZone: http://eureka7001:7001/eureka  # 单机版
+#      defaultZone: http://eureka7001:7001/eureka,http://eureka7002:7002/eureka  # 集群版
+
+# openfeign的超时控制，当使用feign请求其他服务时，超过这个时间则爆超时异常，也可以指定单个服务，跟hystrix类似
+feign:
+  client:
+    config:
+      default:  #全局设置，
+        # ribbon的超时时间，默认等待1秒，得不到爆错
+        connectTimeout: 5000  # 指的是建立连接所用的时间，适用于网路状况正常情况下，两端连接所用的时间
+        readTimeout: 5000   # 指的是建立连接后从服务器读取到可用资源所用的时间
+  hystrix:
+    enabled: true # 开启熔断器，默认包装请求接口的所有方法，并将这些方法过期时间设置为1秒，需要进行下面的配置
+
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 6000 # 设置hystrix的超时时间为6000ms
+

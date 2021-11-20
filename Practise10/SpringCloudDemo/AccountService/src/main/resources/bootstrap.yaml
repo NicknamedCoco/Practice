@@ -1,0 +1,57 @@
+server:
+  port: 2345
+spring:
+  application:
+    name: AccountService
+  profiles:
+    active: dev
+  datasource:
+    url: jdbc:mysql://localhost:3306/springcloud_account?serverTimezone=GMT&useSSL=false&characterEncoding=utf-8
+    username: root
+    password: 123765
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 47.98.138.53:8848
+        cluster-name: HZ
+        namespace: a3a5fee0-15a2-4023-894c-34fbde0f5138
+      config:   #dataId=${spring.application.name}-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+        server-addr: 47.98.138.53:8848
+        file-extension: yaml
+        namespace: a3a5fee0-15a2-4023-894c-34fbde0f5138
+mybatis:
+  mapper-locations: mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+# seata的配置，用于找到seata-server(TC)的服务实例和配置文件信息
+seata:
+  enabled: true
+  application-id: SeataServer
+  enable-auto-data-source-proxy: true
+  tx-service-group: seata-demo
+  data-source-proxy-mode: AT
+  config:
+    type: nacos
+    nacos:
+      server-addr: 47.98.138.53:8848
+      group: SEATA_GROUP
+      namespace: a3a5fee0-15a2-4023-894c-34fbde0f5138
+      dataId: client.properties
+      username: nacos
+      password: nacos
+  #配置的是TC的服务在nacos上的地址
+  registry:
+    type: nacos
+    nacos:
+      application: SeataServer    #TC服务名称
+      server-addr: 47.98.138.53:8848
+      group: DEFAULT_GROUP    #TC所在的组，需要与业务微服务同组
+      namespace: a3a5fee0-15a2-4023-894c-34fbde0f5138
+      username: nacos
+      password: nacos
+  service:
+    vgroup-mapping:
+      seata-demo: HZ    # 事务组与nacos中集群的映射关系，集群指的是TC所在的集群
+    disable-global-transaction: false

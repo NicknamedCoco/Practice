@@ -1,0 +1,3 @@
+world\keyi\controller\PaymentControllerWithHystrix.class
+world\keyi\MyProviderHystrixPayment8001.class
+world\keyi\service\PaymentServiceWithHystrix.class

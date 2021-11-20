@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" native2AsciiForPropertiesFiles="true" defaultCharsetForPropertiesFiles="UTF-8">
+    <file url="file://$PROJECT_DIR$/MyAPI_Commons/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyAPI_Commons/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyCloudConfigCenter_Server3344/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyCloudConfigCenter_Server3344/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyCloudStream_RabbitMQ_Consumer8802/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyCloudStream_RabbitMQ_Consumer8802/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyCloudStream_RabbitMQ_Consumer8803/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyCloudStream_RabbitMQ_Consumer8803/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyCloudStream_RabbitMQ_Provider8801/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyCloudStream_RabbitMQ_Provider8801/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyConsumerConsul_Order80/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyConsumerConsul_Order80/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyConsumerFeign_Hystrix_Order80/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyConsumerFeign_Hystrix_Order80/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyConsumerFeign_Order80/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyConsumerFeign_Order80/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyConsumerHystrixDashBoard_Server9001/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyConsumerHystrixDashBoard_Server9001/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyConsumerNacos_Order80/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyConsumerNacos_Order80/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyConsumerNacos_Order80/src/main/resources/bootstrap.yaml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyConsumer_Order80/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyConsumer_Order80/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyEureka_Server7001/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyEureka_Server7001/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyEureka_Server7002/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyEureka_Server7002/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyGateway_Server9527/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyGateway_Server9527/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyProviderConsul_Payment8006/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyProviderConsul_Payment8006/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyProviderHystrix_Payment8001/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyProviderHystrix_Payment8001/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyProviderNacos_Payment8840/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyProviderNacos_Payment8840/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyProvider_Payment8001/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyProvider_Payment8001/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyProvider_Payment8002/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyProvider_Payment8002/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyRabbitMQ_Consumer/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyRabbitMQ_Consumer/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyRabbitMQ_Provider/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MyRabbitMQ_Provider/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MySentinel-Service8401/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MySentinel-Service8401/src/main/resources" charset="UTF-8" />
+    <file url="PROJECT" charset="UTF-8" />
+  </component>
+</project>
