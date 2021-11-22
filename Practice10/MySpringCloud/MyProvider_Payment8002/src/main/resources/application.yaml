@@ -1,0 +1,27 @@
+server:
+  port: 8002
+
+spring:
+  application:
+    name: MyProviderPayment
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/mycloud?serverTimezone=GMT&useSSL=false&characterEncoding=utf-8
+    username: root
+    password: 123765
+    driver-class-name: com.mysql.cj.jdbc.Driver
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+#  type-aliases-package: world.world.keyi.entities   # 所有Entity别名类所在包
+
+
+eureka:
+  client:
+    register-with-eureka: true  #是否注册进服务注册中心
+    fetchRegistry: true   # 是否从服务注册中心抓取已有的注册信息，默认为true，单节点无所谓，集群必须设置为true才能配合ribbon使用负载均衡
+    service-url:  # 服务注册中心的地址
+      defaultZone: http://localhost:7001/eureka  # 单机版
+#      defaultZone: http://eureka7001:7001/eureka,http://eureka7002:7002/eureka  # 集群版
+  instance:
+    instance-id: payment8002  #配置主机名，在eureka界面上就会显示该名称，而不是主机名称+服务名称+端口号
+    prefer-ip-address: true   #在eureka界面上，鼠标放到status下的链接上，左下角可以显示该服务的ip地址端口号等信息，表示点击后会跳转的地址

@@ -1,6 +1,0 @@
-world\keyi\MyConsumerOrder80.class
-world\keyi\controller\OrderController.class
-world\keyi\lb\LoadBalancer.class
-world\ribbon_rule\RobbonRuleConfig.class
-world\keyi\lb\MyLoadBalancer.class
-world\keyi\config\ApplicationContextConfig.class

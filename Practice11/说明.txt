@@ -1,0 +1,1 @@
+docker-compose部署nacos集群持久化数据到mysql并配置nginx负载均衡

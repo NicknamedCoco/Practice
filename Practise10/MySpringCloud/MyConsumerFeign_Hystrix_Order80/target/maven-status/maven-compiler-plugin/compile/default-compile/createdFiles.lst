@@ -1,4 +1,0 @@
-world\keyi\service\GlobalWayForHystrix.class
-world\keyi\controller\MyFeignController.class
-world\keyi\MyConsumerFeignWithHystrixOrder80.class
-world\keyi\service\MyFeignWithPayment.class

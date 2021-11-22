@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <option name="BUILD_PROCESS_HEAP_SIZE" value="1024" />
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="MyAPI_Commons" />
+        <module name="MyProvider_Payment8002" />
+        <module name="MyProvider_Payment8001" />
+        <module name="MyEureka_Server7002" />
+        <module name="MyConsumerNacos_Order80" />
+        <module name="MyConsumerFeign_Hystrix_Order80" />
+        <module name="MyConsumerHystrixDashBoard_Server9001" />
+        <module name="MyCloudConfigCenter_Server3344" />
+        <module name="MyRabbitMQ_Provider" />
+        <module name="MyEureka_Server7001" />
+        <module name="MyCloudStream_RabbitMQ_Provider8801" />
+        <module name="MyProviderConsul_Payment8006" />
+        <module name="MyConsumerFeign_Order80" />
+        <module name="MyCloudStream_RabbitMQ_Consumer8802" />
+        <module name="MyConsumerConsul_Order80" />
+        <module name="MySentinel-Service8401" />
+        <module name="MyConsumer_Order80" />
+        <module name="MyProviderNacos_Payment8840" />
+        <module name="MyCloudStream_RabbitMQ_Consumer8803" />
+        <module name="MyRabbitMQ_Consumer" />
+        <module name="MyProviderHystrix_Payment8001" />
+        <module name="MyGateway_Server9527" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="MyAPI_Commons" options="" />
+      <module name="MyConsumer_Order80" options="" />
+      <module name="MyEureka_Server7001" options="" />
+      <module name="MyEureka_Server7002" options="" />
+      <module name="MyProvider_Payment8001" options="" />
+      <module name="MyProvider_Payment8002" options="" />
+    </option>
+  </component>
+</project>

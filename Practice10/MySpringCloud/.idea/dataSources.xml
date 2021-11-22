@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="mycloud@localhost" uuid="9af42276-ca43-4b51-87a8-5aacdffffa2f">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <remarks>payment</remarks>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:3306/mycloud?serverTimezone=GMT&amp;useSSL=false&amp;characterEncoding=utf-8</jdbc-url>
+    </data-source>
+  </component>
+</project>
